@@ -1,6 +1,4 @@
-<div ng-repeat="player in game.players">
 	<div class="scoreboard_element">
-		<div class="scoreboard_color" ng-style="{'background-color': player.displayColor()}"></div>
-		<span>{{ player.name }}  -  {{ player.score() }}</span>
+		<div class="scoreboard_color" ng-style="{'background-color': game.player.displayColor()}"></div>
+		<span>{{ game.player.name }}  -  {{ game.player.score() }}</span>
 	</div>
-</div>

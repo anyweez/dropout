@@ -1,7 +1,11 @@
+// A bunch of different potential player colors.
+var colors = ['red', 'orange', 'green', 'yellow', 'blue', 'purple'];
+
 var Player = function(name) {
 	this.name = name;
 	this.created = Date.now();
 	this.alive = true;
+	this.color = colors[Math.floor(Math.random() * 6)];
 
 	// TODO: randomly generate these coordinates.
 	this.x = 5;

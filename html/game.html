@@ -1,27 +1,12 @@
-<!-- 
-	The game should render differently depending on whether it's started yet or not. If not, show the
-	game lobby where other players can join. If it has already started, render the game board itself.
--->
-	<div ng-switch on="game.data.running">
-		<!-- Show the game window if the game has started. -->
-		<div id="game" ng-switch-when="true">
-			<div id="scoreboard">
-				<do-scoreboard></do-scoreboard>
-			</div>
+	<div>
+		<!-- The scoreboard shows the current score for the player. -->
+		<div id="scoreboard">
+			<do-scoreboard></do-scoreboard>
+		</div>
 
-			<div id="grid">
-				<do-grid></do-grid>
-				<do-player ng-repeat="player in game.data.players"></do-player>
-			</div>
-		</div>		
-
-		<!-- If the game hasn't started yet, render the lobby instead. -->
-		<div id="lobby" ng-switch-when="false">
-			<div>Lobby #{{ game.data.id }}</div>
-			<div ng-repeat="player in game.data.players">
-				<div>- {{ player.name }}</div>
-			</div>
-
-			<button ng-click="start()">Start game</button>
+		<!-- The grid is the main game board. -->
+		<div id="grid">
+			<do-grid></do-grid>
+			<do-player></do-player>
 		</div>
 	</div>

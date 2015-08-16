@@ -4,39 +4,22 @@ dropoutControllers.controller('WelcomeController', ['$scope', '$location', 'game
 	$scope.create = function() {
 		// Create a new game and redirect to the lobby.
 		var game = gameService.create();
-		game.addPlayer(new Player($scope.playerName));
+		game.player = new Player($scope.playerName);
 
-		$location.path('/game/' + game.data.id);
+		$location.path('/game');
 	};
-
-	$scope.join = function() {
-		// Join an existing game (if it exists).
-		var game = gameService.get($scope.gameId);
-		if (game != undefined) {
-			game.addPlayer($scope.playerName, {x: 1, y: 1}, true);
-			// Redirect to lobby / game.		
-			$location.path('/game/' + $scope.gameId);
-		} else {
-			// TODO: Create a new game.
-			$scope.create();
-		}
-	}
 }]);
 
 // This controller keeps track of the game world, where players are, what cells still exist, etc.
-dropoutControllers.controller('GameController', ['$scope', '$interval', '$routeParams', 'gameService', 'hotkeys', function($scope, $interval, $routeParams, gameService, hotkeys) {
-	$scope.game = gameService.get($routeParams.gameId);
-
-	$scope.game.data.$loaded().then(function() {
-		$scope.player = $scope.game.getLocalPlayer();
-	});
+dropoutControllers.controller('GameController', ['$scope', '$interval', '$routeParams', '$timeout', 'gameService', 'hotkeys', function($scope, $interval, $routeParams, $timeout, gameService, hotkeys) {
+	$scope.game = gameService.get();
 
 	// Move right
 	hotkeys.add({
 		combo: 'd',
 		description: 'Move right',
 		callback: function() {
-			$scope.movePlayer($scope.player, 1, 0);
+			$scope.movePlayer($scope.game.player, 1, 0);
 		}
 	});
 
@@ -45,7 +28,7 @@ dropoutControllers.controller('GameController', ['$scope', '$interval', '$routeP
 		combo: 'a',
 		description: 'Move left',
 		callback: function() {
-			$scope.movePlayer($scope.player, -1, 0);
+			$scope.movePlayer($scope.game.player, -1, 0);
 		}
 	});
 
@@ -54,7 +37,7 @@ dropoutControllers.controller('GameController', ['$scope', '$interval', '$routeP
 		combo: 'w',
 		description: 'Move up',
 		callback: function() {
-			$scope.movePlayer($scope.player, 0, -1);
+			$scope.movePlayer($scope.game.player, 0, -1);
 		}
 	});
 
@@ -63,7 +46,7 @@ dropoutControllers.controller('GameController', ['$scope', '$interval', '$routeP
 		combo: 's',
 		description: 'Move down',
 		callback: function() {
-			$scope.movePlayer($scope.player, 0, 1);
+			$scope.movePlayer($scope.game.player, 0, 1);
 		}
 	})
 
@@ -71,8 +54,7 @@ dropoutControllers.controller('GameController', ['$scope', '$interval', '$routeP
 	 * Start the game.
 	 */
 	$scope.start = function() {
-		$scope.game.data.running = true;
-		$scope.game.save();
+		$scope.game.running = true;
 	}
 
 	$scope.movePlayer = function(player, deltaX, deltaY) {
@@ -83,15 +65,13 @@ dropoutControllers.controller('GameController', ['$scope', '$interval', '$routeP
 			// Check to see if the move is valid. If not, don't move.
 			if ($scope.game.validMove(newx, newy)) {
 				// Remove from the old cell.
-				$scope.game.removeFromCell(player);
+				$scope.game.grid.remove(player);
 				// Add to the new cell.
 				player.x = newx;
 				player.y = newy;
-				$scope.game.addToCell(player);
+				$scope.game.grid.add(player);
 
 				console.log("moving to (" + player.x + ", " + player.y + ")");
-				// Update Firebase.
-				$scope.game.save();
 			} else {
 				console.log('invalid');
 			}
@@ -99,15 +79,30 @@ dropoutControllers.controller('GameController', ['$scope', '$interval', '$routeP
 	}
 
 	// TODO: Every few seconds, drop a random cell.
-	
 	$interval(function() {
-		if ($scope.game.running) {
-			// Select an X and Y value between 0 and $scope.dim
-			var dropx = Math.floor(Math.random() * $scope.game.data.dim);
-			var dropy = Math.floor(Math.random() * $scope.game.data.dim);
+		// Select an X and Y value between 0 and $scope.dim
+		var dropx = Math.floor(Math.random() * $scope.game.grid.dim);
+		var dropy = Math.floor(Math.random() * $scope.game.grid.dim);
 
-			// Drop the cell.
-//			$scope.game.dropCell(dropx, dropy);
+		// Drop the cell.
+		var cell = $scope.game.grid.cells[$scope.game.grid.index(dropx, dropy)];
+
+		// Only cells that are still present can drop.
+		if (cell.state == 0) {
+			console.log('dropping (' + dropx + ', ' + dropy + ')');
+			// Start to fall
+			cell.state = 1;
+
+			// In a few seconds, actually fall.
+			$timeout(function() {
+				cell.state = 3;
+
+				// If any players are on this cell, they fall to their doom. Mark them as dead.
+				for (var name in cell.inhabitants) {
+				 	$scope.game.players[name].alive = false;
+				 	$scope.game.players[name].defeated = Date.now();
+				}
+			}, 3000);
 		}
 	}, 2000);
 }]);

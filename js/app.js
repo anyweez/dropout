@@ -10,7 +10,7 @@ var dropoutApp = angular.module("dropoutApp", [
 		controller: 'WelcomeController',
 	});
 
-	$routeProvider.when('/game/:gameId', {
+	$routeProvider.when('/game', {
 		templateUrl: 'html/game.html',
 		controller: 'GameController',
 	});
