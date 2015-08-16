@@ -1,18 +1,13 @@
-<h2>Welcome to Dropout</h2>
+<div id="home">
+	<h2 class="shake" ng-class="{'shake-constant': shaking}">Dropout</h2>
 
-<div>
-	<label for="player_name">Player name</label>
-	<input type="text" id="player_name" name="player_name" ng-model="playerName" />
-</div>
+	<div style="margin">
+		<label for="player_name">Player name</label>
+		<input type="text" id="player_name" name="player_name" ng-model="playerName" />
+	</div>
 
-<p>Game options</p>
+	<p>Game options</p>
 
-<div>
 	<button id="action_create_game" ng-click="create()">Create a new game</button>
-</div>
-
-<div>
-	<label for="game_id">Join game:</label>
-	<input type="text" id="game_id" name="game_id" ng-model="gameId" />
-	<input type="button" id="action_join_game" ng-click="join()" value="Join" />
+	<button id="action_resume" ng-click="resume()" ng-disabled="!canResume()">Resume existing game</button>
 </div>

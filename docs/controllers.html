@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>controllers.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="app.html">
+                  app.js
+                </a>
+              
+                
+                <a class="source" href="controllers.html">
+                  controllers.js
+                </a>
+              
+                
+                <a class="source" href="directives.html">
+                  directives.js
+                </a>
+              
+                
+                <a class="source" href="services.html">
+                  services.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>controllers.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>Initialize the <code>dropout.controllers</code> module, which will be loaded by app.js. The only external
+dependency is on <a href="http://chieffancypants.github.io/angular-hotkeys/">AngularHotkeys</a>. Full documentation
+for controllers in AngularJS can be found in the <a href="https://docs.angularjs.org/guide/controller">Angular docs</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> dropoutControllers = angular.module(<span class="hljs-string">"dropout.controllers"</span>, [<span class="hljs-string">'cfp.hotkeys'</span>,]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>The <code>WelcomeController</code> is responsible for handling the rendering of the pre-game view and handling the creation
+of new games.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>dropoutControllers.controller(<span class="hljs-string">'WelcomeController'</span>, [<span class="hljs-string">'$scope'</span>, <span class="hljs-string">'$location'</span>, <span class="hljs-string">'$interval'</span>, <span class="hljs-string">'$timeout'</span>, <span class="hljs-string">'gameService'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">$scope, $location, $interval, $timeout, gameService</span>) </span>{
+	<span class="hljs-comment">/* For visual flair. */</span>
+	$scope.shaking = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Called by the view when we should create a new game. Creating a game is always paired with defining the
+player that’s going to be playing. Finish with a redirect to a new route (which will also be handled by
+a different controller).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	$scope.create = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+		<span class="hljs-keyword">var</span> game = gameService.create();
+		game.player = <span class="hljs-keyword">new</span> Player($scope.playerName);
+
+		$location.path(<span class="hljs-string">'/game'</span>);
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Determines whether the player is able to resume from an existing incomplete game.
+This functionality doesn’t exist today so the answer is always “no” at the moment.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	$scope.canResume = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+		<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Periodically shake some of the UI elements a little bit so that people feel the fear.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	$interval(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+		$scope.shaking = <span class="hljs-literal">true</span>;
+		$timeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ $scope.shaking = <span class="hljs-literal">false</span>; }, <span class="hljs-number">500</span>)		
+	}, <span class="hljs-number">5000</span>);
+}]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>This controller keeps track of the game world and modifies it based on user inputs + randomness!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>dropoutControllers.controller(<span class="hljs-string">'GameController'</span>, [<span class="hljs-string">'$scope'</span>, <span class="hljs-string">'$interval'</span>, <span class="hljs-string">'$routeParams'</span>, <span class="hljs-string">'$timeout'</span>, <span class="hljs-string">'$location'</span>, <span class="hljs-string">'gameService'</span>, <span class="hljs-string">'hotkeys'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">$scope, $interval, $routeParams, $timeout, $location, gameService, hotkeys</span>) </span>{
+	$scope.game = gameService.get();
+
+	<span class="hljs-comment">/* If no game has been created, redirect back to a route handled by WelcomeController. */</span>
+	<span class="hljs-keyword">if</span> ($scope.game == <span class="hljs-literal">null</span>) {
+		$location.path(<span class="hljs-string">'/'</span>);
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Attach a bunch of different listeners so that we can respond to user events. Incredibly
+easy thanks to the wonderful <a href="http://chieffancypants.github.io/angular-hotkeys/">AngularHotkeys</a>
+library. See the <code>description</code> field of each to get a glimpse for what it does.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	hotkeys.add({
+		combo: <span class="hljs-string">'d'</span>,
+		description: <span class="hljs-string">'Move right'</span>,
+		callback: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			$scope.movePlayer($scope.game.player, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>);
+		}
+	});
+
+	hotkeys.add({
+		combo: <span class="hljs-string">'a'</span>,
+		description: <span class="hljs-string">'Move left'</span>,
+		callback: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			$scope.movePlayer($scope.game.player, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>);
+		}
+	});
+
+	hotkeys.add({
+		combo: <span class="hljs-string">'w'</span>,
+		description: <span class="hljs-string">'Move up'</span>,
+		callback: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			$scope.movePlayer($scope.game.player, <span class="hljs-number">0</span>, -<span class="hljs-number">1</span>);
+		}
+	});
+
+	hotkeys.add({
+		combo: <span class="hljs-string">'s'</span>,
+		description: <span class="hljs-string">'Move down'</span>,
+		callback: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+			$scope.movePlayer($scope.game.player, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
+		}
+	})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Now define some functions that the view can use.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+	<span class="hljs-comment">/* Start the game. */</span>
+	$scope.start = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+		$scope.game.running = <span class="hljs-literal">true</span>;
+	}
+
+	<span class="hljs-comment">/* Invoked by the hotkey handlers above. */</span>
+	$scope.movePlayer = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">player, deltaX, deltaY</span>) </span>{
+		<span class="hljs-keyword">if</span> (player.alive) {
+			<span class="hljs-keyword">var</span> newx = player.x + deltaX;
+			<span class="hljs-keyword">var</span> newy = player.y + deltaY;
+
+			<span class="hljs-comment">/* Check to see if the move is valid. If not, don't move. */</span>
+			<span class="hljs-keyword">if</span> ($scope.game.validMove(newx, newy)) {
+				<span class="hljs-comment">/* Remove from the old cell. */</span>
+				$scope.game.grid.remove(player);
+				<span class="hljs-comment">/* Add to the new cell. */</span>
+				player.x = newx;
+				player.y = newy;
+				$scope.game.grid.add(player);
+			} <span class="hljs-keyword">else</span> {
+				<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Cannot move to ('</span> + newx + <span class="hljs-string">', '</span> + newy + <span class="hljs-string">')'</span>);
+			}
+		}
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Every few seconds, drop a random cell. “Dropping” involves a couple of different
+state transitions, one that occurs now and another that occurs in a couple of seconds
+via a callback. </p>
+<p>Note that the probability of selecting a particular cell is uniform, and that it’s possible
+to re-select a cell that’s already fallen. If a cell is reselected, a new cell is not chosen
+until the next interval.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	$interval(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+		<span class="hljs-keyword">if</span> ($scope.game != <span class="hljs-literal">null</span> &amp;&amp; $scope.game.player.alive) {
+			<span class="hljs-comment">/* Select an X and Y value between 0 and $scope.dim*/</span>
+			<span class="hljs-keyword">var</span> dropx = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * $scope.game.grid.dim);
+			<span class="hljs-keyword">var</span> dropy = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * $scope.game.grid.dim);
+
+			<span class="hljs-comment">/* Drop the cell */</span>
+			<span class="hljs-keyword">var</span> cell = $scope.game.grid.cells[$scope.game.grid.index(dropx, dropy)];
+
+			<span class="hljs-comment">/* Only cells that are still present can drop */</span>
+			<span class="hljs-keyword">if</span> (cell.state == <span class="hljs-number">0</span>) {
+				<span class="hljs-comment">/* Start to fall */</span>
+				cell.state = <span class="hljs-number">1</span>;
+
+				<span class="hljs-comment">/* In a few seconds, actually fall */</span>
+				$timeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+					cell.state = <span class="hljs-number">3</span>;
+
+					<span class="hljs-comment">/* If any players are on this cell, they fall to their doom. Mark them as dead. */</span>
+					<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> name <span class="hljs-keyword">in</span> cell.inhabitants) {
+				 		$scope.game.player.alive = <span class="hljs-literal">false</span>;
+					 	$scope.game.player.defeated = <span class="hljs-built_in">Date</span>.now();
+					}
+				}, <span class="hljs-number">3000</span>);
+			}
+		}
+	}, <span class="hljs-number">750</span>);
+}]);</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

@@ -1,7 +1,56 @@
+/**
+ * Shared styles.
+ */
 body {
-	background-color: #dedede;
+	background-color: #efefef;
+	/* Google Font */
+	font-family: 'Lato', sans-serif;
+
+	margin: 0;
 }
 
+/**
+ * home.html (welcome page)
+ */
+
+#home {
+	width: 30%;
+	height: 100%;
+	margin: 0 0 0 10%;
+	padding: 2%;
+	background-color: #bbb;
+
+	border: solid black;
+	border-width: 0 4px 0 4px;
+}
+
+#home h2 {
+	font-size: 2em;
+}
+
+#home label {
+	display: block;
+}
+
+#home input[type=text] {
+	width: 80%;
+	height: 50px;
+	padding: 5px;
+	margin-top: 5px;
+
+	font-size: 1.5em;
+	font-family: 'Lato', sans-serif;
+}
+
+#home button {
+	width: 40%;
+	height: 40px;
+	font-family: 'Lato', sans-serif;
+}
+
+/**
+ * game.html
+ */
 #grid {
 	display: inline-block;
 	margin: 1% 20% 1% 20%;
@@ -9,7 +58,7 @@ body {
 
 #scoreboard {
 /*	visibility: hidden; */
-	margin: 0 20% 0 20%;
+	margin: 10px 20% 0 20%;
 }
 
 .gridCell {
@@ -28,11 +77,11 @@ body {
 }
 
 .fallen {
-	background-color: #dedede;
+	visibility: hidden;
 	border: 1px solid #dedede;
 }
 
-.shake {
+.shake_bg {
 	background-color: red;
 }
 

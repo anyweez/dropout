@@ -1,19 +1,24 @@
-// A bunch of different potential player colors.
+// A `Player` keeps track of the state of a single player, including information used by the
+// view (color, alive status) and logic within controllers,
+
+/* A bunch of different potential player colors. */
 var colors = ['red', 'orange', 'green', 'yellow', 'blue', 'purple'];
 
+// Constructor function for `Player` objects.
 var Player = function(name) {
 	this.name = name;
 	this.created = Date.now();
 	this.alive = true;
 	this.color = colors[Math.floor(Math.random() * 6)];
 
-	// TODO: randomly generate these coordinates.
-	this.x = 5;
-	this.y = 5;
+	/* Generate a random starting point, [0, 12]. */
+	this.x = Math.floor(Math.random() * 13);
+	this.y = Math.floor(Math.random() * 13);
 
 	return this;
 }
 
+// A bunch of different fields and objects that all `Player` objects should have.
 Player.prototype = {
 	name: "",
 	color: "",
