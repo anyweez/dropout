@@ -99,8 +99,8 @@ dropoutControllers.controller('GameController', ['$scope', '$interval', '$routeP
 
 				// If any players are on this cell, they fall to their doom. Mark them as dead.
 				for (var name in cell.inhabitants) {
-				 	$scope.game.players[name].alive = false;
-				 	$scope.game.players[name].defeated = Date.now();
+				 	$scope.game.player.alive = false;
+				 	$scope.game.player.defeated = Date.now();
 				}
 			}, 3000);
 		}
